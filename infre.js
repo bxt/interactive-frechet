@@ -18,26 +18,62 @@ var linesCanvas = d3.select("body").insert("svg")
   .attr("width", width)
   .attr("height", height);
 
+var pathsLines = linesCanvas.append("g").attr("class","paths")
+  .selectAll("path").data(paths).enter().append("path");
+
+function updatePathLines() {
+  pathsLines.attr("d", d3.svg.line());
+}
+updatePathLines();
+
+var drag = d3.behavior.drag()
+  .origin(Object)
+  .on("drag", function(d,i,j){
+    d.x = d3.event.x;
+    d.y = d3.event.y;
+    console.log(d,i,j)
+    d3.select(this)
+      .attr("cx", d.x)
+      .attr("cy", d.y);
+    paths[j][i][0] = d.x;
+    paths[j][i][1] = d.y;
+    updatePathLines();
+    updateCircle();
+    leash.attr('d','');
+  });
+
+var handle = linesCanvas
+  .selectAll("g.handles")
+  .data(paths)
+  .enter()
+    .append("g")
+    .selectAll("circle")
+    .data(function(d){return d.map(function(d){return {x: d[0], y: d[1]};});})
+    .enter()
+      .append("circle")
+      .attr("cx", acc("x"))
+      .attr("cy", acc("y"))
+      .attr("r", 6)
+      .attr("class", "handle")
+      .call(drag);
+
+
+var leash = linesCanvas.append("path").attr('class','leash');
+
 var freespaceCanvas = d3.select("body").insert("svg")
   .attr("width", width)
   .attr("height", height);
 
-linesCanvas.append("g")
-  .selectAll("path")
-  .data(paths)
-  .enter()
-    .append("path")
-      .attr("d", d3.svg.line());
-
-var leash = linesCanvas.append("path").attr('class','leash');
-
 freespaceCanvas.append("clipPath").attr('id','uniclip')
   .append("rect").attr("width", 1).attr("height", 1)
 
-freespaceCanvas.append("g")
+var theCircle = freespaceCanvas.append("g")
   .attr("transform",d3.svg.transform().translate(marginX, marginY).scale(size))
   .attr("clip-path","url(#uniclip)")
   .append("circle")
+
+function updateCircle() {
+  theCircle
     .attr("vector-effect","non-scaling-stroke")
     .attr("r", epsilon)
     .attr("transform",d3.svg.transform().matrix(function(){
@@ -49,6 +85,8 @@ freespaceCanvas.append("g")
       var tt = mmult(mi,t);
       return [mi[0],mi[2],mi[1],mi[3],tt[0],tt[1]];
     }));
+}
+updateCircle();
 
 var xAxis = d3.svg.axis()
             .scale(x)
