@@ -22,7 +22,6 @@ var freespaceCanvas = d3.select("body").insert("svg")
   .attr("width", width)
   .attr("height", height);
 
-
 linesCanvas.append("g")
   .selectAll("path")
   .data(paths)
@@ -31,6 +30,9 @@ linesCanvas.append("g")
       .attr("d", d3.svg.line());
 
 var leash = linesCanvas.append("path").attr('class','leash');
+
+freespaceCanvas.append("clipPath").attr('id','uniclip')
+  .append("rect").attr("width", 1).attr("height", 1)
 
 function determinant(m) {
   return m[0]*m[3] - m[1]*m[2];
@@ -50,7 +52,8 @@ function mmult(m1, m2) {
 }
 
 freespaceCanvas.append("g")
-  .attr("transform","translate("+(marginX)+","+(marginY)+") scale("+size+")")
+  .attr("transform","translate("+marginX+","+marginY+") scale("+size+")")
+  .attr("clip-path","url(#uniclip)")
   .append("circle")
     .attr("vector-effect","non-scaling-stroke")
     .attr("r", epsilon)
