@@ -34,23 +34,6 @@ var leash = linesCanvas.append("path").attr('class','leash');
 freespaceCanvas.append("clipPath").attr('id','uniclip')
   .append("rect").attr("width", 1).attr("height", 1)
 
-function determinant(m) {
-  return m[0]*m[3] - m[1]*m[2];
-}
-
-function inverse(m) {
-  var d = 1/determinant(m);
-  return [  m[3]*d,-m[1]*d
-         , -m[2]*d, m[0]*d
-         ];
-}
-
-function mmult(m1, m2) {
-  return [ m1[0]*m2[0] + m1[1]*m2[1]
-         , m1[2]*m2[0] + m1[3]*m2[1]
-         ];
-}
-
 freespaceCanvas.append("g")
   .attr("transform","translate("+marginX+","+marginY+") scale("+size+")")
   .attr("clip-path","url(#uniclip)")
@@ -66,7 +49,6 @@ freespaceCanvas.append("g")
   var tt = mmult(mi,t);
   return "matrix("+mi[0]+","+mi[2]+","+mi[1]+","+mi[3]+","+tt[0]+","+tt[1]+")";
 })());
-
 
 var xAxis = d3.svg.axis()
             .scale(x)
@@ -85,17 +67,6 @@ freespaceCanvas.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate("+(marginX-3)+",0)")
             .call(yAxis)
-
-
-function norm(x) {
-  return Math.sqrt(x[0]*x[0] + x[1]*x[1]);
-}
-
-function subtract(d) {
-  return [ [d[0][0] - d[1][0]]
-         , [d[0][1] - d[1][1]]
-         ];
-}
 
 var distance = ch(norm, subtract);
 
