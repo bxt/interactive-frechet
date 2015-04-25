@@ -35,20 +35,20 @@ freespaceCanvas.append("clipPath").attr('id','uniclip')
   .append("rect").attr("width", 1).attr("height", 1)
 
 freespaceCanvas.append("g")
-  .attr("transform","translate("+marginX+","+marginY+") scale("+size+")")
+  .attr("transform",d3.svg.transform().translate(marginX, marginY).scale(size))
   .attr("clip-path","url(#uniclip)")
   .append("circle")
     .attr("vector-effect","non-scaling-stroke")
     .attr("r", epsilon)
-    .attr("transform",(function(){
-  var m = [ paths[0][1][0] - paths[0][0][0], paths[1][0][0] - paths[1][1][0]
-          , paths[0][1][1] - paths[0][0][1], paths[1][0][1] - paths[1][1][1]
-          ];
-  var t = [ paths[1][0][0] - paths[0][0][0], paths[1][0][1] - paths[0][0][1] ];
-  var mi = inverse(m);
-  var tt = mmult(mi,t);
-  return "matrix("+mi[0]+","+mi[2]+","+mi[1]+","+mi[3]+","+tt[0]+","+tt[1]+")";
-})());
+    .attr("transform",d3.svg.transform().matrix(function(){
+      var m = [ paths[0][1][0] - paths[0][0][0], paths[1][0][0] - paths[1][1][0]
+              , paths[0][1][1] - paths[0][0][1], paths[1][0][1] - paths[1][1][1]
+              ];
+      var t = [ paths[1][0][0] - paths[0][0][0], paths[1][0][1] - paths[0][0][1] ];
+      var mi = inverse(m);
+      var tt = mmult(mi,t);
+      return [mi[0],mi[2],mi[1],mi[3],tt[0],tt[1]];
+    }));
 
 var xAxis = d3.svg.axis()
             .scale(x)
@@ -56,7 +56,7 @@ var xAxis = d3.svg.axis()
 
 freespaceCanvas.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0,"+(marginY-3)+")")
+            .attr("transform", d3.svg.transform().translate(0, marginY-3))
             .call(xAxis)
 
 var yAxis = d3.svg.axis()
@@ -65,7 +65,7 @@ var yAxis = d3.svg.axis()
 
 freespaceCanvas.append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate("+(marginX-3)+",0)")
+            .attr("transform", d3.svg.transform().translate(marginX-3, 0))
             .call(yAxis)
 
 var distance = ch(norm, subtract);
