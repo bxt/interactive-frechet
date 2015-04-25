@@ -6,7 +6,7 @@ var paths = [ [[100,100],[400,200]]
 
 var epsilon = 200;
 
-var  width = window.innerWidth/2,
+var  width = (window.innerWidth/2)-15,
     height = window.innerHeight,
       size = Math.min(width, height)*0.8;
    marginX = ( width-size)/2;
