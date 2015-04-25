@@ -4,6 +4,7 @@
 <style>
 * { padding: 0; margin: 0; }
 body {font-family: Helvetica, Arial, sans-serif;}
+div {font-size: 10px; position: absolute; left: 10px; top: 10px;}
 svg {float: left;}
 path {stroke: #000; fill: none;}
 .leash {stroke: #777;}
@@ -13,6 +14,17 @@ circle {fill: #ddd; stroke: #999;}
 .handle:hover {fill: #44D;}
 </style>
 <body>
+<div>
+  <h1>Interactive Fréchet Distance Calculation</h1>
+  <p>
+    Drag the endpoints of the line segments or hover the freespace graph to
+    see some action.
+  </p>
+  <p>
+    Made by <a href="http://bernhardhaeussner.de">Bernhard Häussner</a>.
+    Based on a paper from <a href="http://www.staff.science.uu.nl/~kreve101/asci/ag-cfdbt-95.pdf">H. Alt &amp; M. Godau (1995)</a> and lecture slides of <a href="https://wuecampus2.uni-wuerzburg.de/moodle/course/view.php?id=11778">T. van Dijk (2015)</a>.
+  </p>
+</div>
 <script src="d3.js"></script>
 <script src="d3-transform.js"></script>
 <script src="funtools.js"></script>
