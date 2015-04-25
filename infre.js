@@ -32,6 +32,39 @@ linesCanvas.append("g")
 
 var leash = linesCanvas.append("path").attr('class','leash');
 
+function determinant(m) {
+  return m[0]*m[3] - m[1]*m[2];
+}
+
+function inverse(m) {
+  var d = 1/determinant(m);
+  return [  m[3]*d,-m[1]*d
+         , -m[2]*d, m[0]*d
+         ];
+}
+
+function mmult(m1, m2) {
+  return [ m1[0]*m2[0] + m1[1]*m2[1]
+         , m1[2]*m2[0] + m1[3]*m2[1]
+         ];
+}
+
+freespaceCanvas.append("g")
+  .attr("transform","translate("+(marginX)+","+(marginY)+") scale("+size+")")
+  .append("circle")
+    .attr("vector-effect","non-scaling-stroke")
+    .attr("r", epsilon)
+    .attr("transform",(function(){
+  var m = [ paths[0][1][0] - paths[0][0][0], paths[1][0][0] - paths[1][1][0]
+          , paths[0][1][1] - paths[0][0][1], paths[1][0][1] - paths[1][1][1]
+          ];
+  var t = [ paths[1][0][0] - paths[0][0][0], paths[1][0][1] - paths[0][0][1] ];
+  var mi = inverse(m);
+  var tt = mmult(mi,t);
+  return "matrix("+mi[0]+","+mi[2]+","+mi[1]+","+mi[3]+","+tt[0]+","+tt[1]+")";
+})());
+
+
 var xAxis = d3.svg.axis()
             .scale(x)
             .orient("top");
